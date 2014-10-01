@@ -1,31 +1,30 @@
-#import socket module
+# import socket module
 from socket import *
 serverSocket = socket(AF_INET, SOCK_STREAM)
-#Prepare a sever socket
-serverSocket.bind(('classes.csc.lsu.edu',50113))
+# Prepare a sever socket
+serverSocket.bind(('localhost',50113))
 serverSocket.listen(5)
-print "Listening on http://localhost:50113"
+print 'Listening on http://localhost:50113'
+print 'Ready to serve...'
 while True:
-  #Establish the connection
-  print 'Ready to serve...'
+  # Establish connection
   (connectionSocket, addr) = serverSocket.accept()
   try:
-    message = "file: indesx.html"
+    message = 'file: index.html'
     filename = message.split()[1]
-    print filename
+    print 'Opening file "' + filename + '" to serve'
     f = open(filename, 'rb')
     outputdata = f.read()
-    #Fill in start #Fill in end
-    #Send one HTTP header line into socket
+    # Send HTTP header
     connectionSocket.send('HTTP/1.1 200 OK\nContent-Type: text/html\n')
-    connectionSocket.send("Content-Length: " + str(len(outputdata)) + '\n\n')
-    #Send the content of the requested file to the client
+    connectionSocket.send('Content-Length: ' + str(len(outputdata)) + '\n\n')
     for i in range(0, len(outputdata)):
-      connectionSocket.send(outputdata[i])
+      connectionSocket.send(outputdata[i]) # So much datas!
     connectionSocket.close()
+    print 'Sucessfully served file "' + filename + '", connection closed'
   except IOError:
-    print "zomg an error"
-    #Send message for file not found
-    connectionSocket.send('HTTP/1.1 404 Not Found\n\n')
-    #Close client socket
+    # Couldn't open file, send 404 & close connection
+    errorMessage = '404: File "' + filename + '" not found\n\n'
+    print errorMessage
+    connectionSocket.send(errorMessage)
     connectionSocket.close()
