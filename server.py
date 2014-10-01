@@ -2,9 +2,9 @@
 from socket import *
 serverSocket = socket(AF_INET, SOCK_STREAM)
 #Prepare a sever socket
-serverSocket.bind(('localhost',5000))
+serverSocket.bind(('classes.csc.lsu.edu',50113))
 serverSocket.listen(5)
-print "Listening on http://localhost:5000"
+print "Listening on http://localhost:50113"
 while True:
   #Establish the connection
   print 'Ready to serve...'
